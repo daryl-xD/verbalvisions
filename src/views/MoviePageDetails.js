@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, Form, Col, Button, Container, Row, Image, Badge, Modal } from 'react-bootstrap';
+import { Card, Form, Col, Button, Container, Row, Image, Badge, Modal, ListGroup } from 'react-bootstrap';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { db, auth } from "../firebase";
@@ -15,6 +15,11 @@ export default function MoviePageDetails() {
   const [newComment, setNewComment] = useState('');
   const [rating, setRating] = useState(10);
   const [trailer, setTrailer] = useState("");
+  const [releasedate, setReleasedate] = useState("");
+  const [origin, setOrigin] = useState("");
+  const [site, setSite] = useState("");
+  const [location, setLocations] = useState("");
+  const [production, setProduction] = useState("");
   const params = useParams();
   const id = params.id;
   const [showModal, setShowModal] = useState(false);
@@ -32,6 +37,11 @@ export default function MoviePageDetails() {
     setTitle(movie.title);
     setComments(movie.comments || []);
     setTrailer(movie.trailer);
+    setReleasedate(movie.releasedate);
+    setOrigin(movie.origin);
+    setSite(movie.site); 
+    setLocations(movie.location);
+    setProduction(movie.production);
   }
 
 async function addComment(e){
@@ -125,13 +135,22 @@ const handleUpdate = async () => {
       <iframe width="100%" height="100%" src={trailer} title={title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
     </Col>
     <Col md={3}>
-      ultra cool idea incoming maybe
+      <Card className="h-100">
+        <Card.Header as="h2">Details</Card.Header>
+        <ListGroup variant="flush">
+          <ListGroup.Item><strong>Title: </strong>{title}</ListGroup.Item>
+          <ListGroup.Item><strong>Release Date:</strong> {releasedate}</ListGroup.Item>
+          <ListGroup.Item><strong>Country of Origin:</strong> {origin}</ListGroup.Item>
+          <ListGroup.Item><strong>Official Sites:</strong> <a href={site} target="_blank" rel="noopener noreferrer">{site}</a></ListGroup.Item>
+          <ListGroup.Item><strong>Filming Locations:</strong> {location}</ListGroup.Item>
+          <ListGroup.Item><strong>Production Companies:</strong> {production}</ListGroup.Item>
+        </ListGroup>
+      </Card>
     </Col>
     <Col style={{ marginTop: "1rem" }}>
       <Card>
         <Card.Body>
-          <h2><Card.Text>{title}</Card.Text></h2>
-          <h4>Synopsis:</h4>
+          <h2><Card.Text>Synopsis</Card.Text></h2>
           <Card.Text>{caption}</Card.Text>
         </Card.Body>
       </Card>
@@ -140,30 +159,35 @@ const handleUpdate = async () => {
 </Container>
      
       <Container style={{ marginTop: "2rem" , marginBottom:"2rem"}}>
-      <h4>Comments:</h4>
-  {comments.map((comment, index) => (
-    <Card key={index} className="mb-3">
-      <Card.Header>{comment.user}:</Card.Header>
-      <Card.Body>
-        <blockquote className="blockquote mb-0">
-          <p>{comment.comment}</p>
-          <footer className="blockquote-footer">
-            {comment.rating} <br /> <cite title="Source Title">{comment.time}</cite>
-          </footer>
-        </blockquote>
-        {authuser && authuser.email === comment.user && (
-          <div className="d-flex justify-content-end">
-          <Button variant="warning" onClick={() => openModal(comment)} style={{ marginRight: '10px' }}>
-          Update
-        </Button>
-          <Button variant="danger" onClick={() => deleteComment(comment.id)}>
-            Delete
+      {console.log("comments are here" +comments)}
+  <h4>Reviews:</h4>
+  {comments.length === 0 ? (
+    <p>No reviews yet, be the first to review</p>
+  ) : (
+    comments.map((comment, index) => (
+      <Card key={index} className="mb-3">
+        <Card.Header>{comment.user}:</Card.Header>
+        <Card.Body>
+          <blockquote className="blockquote mb-0">
+            <p>{comment.comment}</p>
+            <footer className="blockquote-footer">
+              {comment.rating} <br /> <cite title="Source Title">{comment.time}</cite>
+            </footer>
+          </blockquote>
+          {authuser && authuser.email === comment.user && (
+            <div className="d-flex justify-content-end">
+            <Button variant="warning" onClick={() => openModal(comment)} style={{ marginRight: '10px' }}>
+            Update
           </Button>
-          </div>
-        )}
-      </Card.Body>
-    </Card>
-  ))}
+            <Button variant="danger" onClick={() => deleteComment(comment.id)}>
+              Delete
+            </Button>
+            </div>
+          )}
+        </Card.Body>
+      </Card>
+    ))
+  )}
 <Card>
   <Card.Header>
     <Card.Title style={{ fontSize: '16px' }}>
