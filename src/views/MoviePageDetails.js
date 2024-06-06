@@ -3,8 +3,8 @@ import { Card, Form, Col, Button, Container, Row, Image, Badge, Modal, ListGroup
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { db, auth } from "../firebase";
-import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { deleteDoc, getDoc, writeBatch, addDoc, collection } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { getDoc, writeBatch } from "firebase/firestore";
 import Navigation from "../components/navigation";
 
 export default function MoviePageDetails() {

@@ -4,7 +4,6 @@ import { signOut } from "firebase/auth";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Form } from 'react-bootstrap';
-import { useState } from 'react';
 
 export default function Navigation() {
     const [user, loading] = useAuthState(auth);
