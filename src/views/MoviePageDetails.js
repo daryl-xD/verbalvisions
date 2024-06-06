@@ -122,6 +122,17 @@ const handleUpdate = async () => {
     getmovie(id);
   }, [id, navigate, authuser, loading]);
 
+  function censorEmail(email) {
+    let censoredEmail = email.slice(0, 2);
+    for (let i = 2; i < email.length; i++) {
+        if (email[i] === '@') {
+            censoredEmail += email.slice(i);
+            break;
+        }
+        censoredEmail += '*';
+    }
+    return censoredEmail;
+}
 
   return (
     <>
@@ -159,14 +170,13 @@ const handleUpdate = async () => {
 </Container>
      
       <Container style={{ marginTop: "2rem" , marginBottom:"2rem"}}>
-      {console.log("comments are here" +comments)}
   <h4>Reviews:</h4>
   {comments.length === 0 ? (
     <p>No reviews yet, be the first to review</p>
   ) : (
     comments.map((comment, index) => (
       <Card key={index} className="mb-3">
-        <Card.Header>{comment.user}:</Card.Header>
+        <Card.Header>{censorEmail(comment.user)}:</Card.Header>
         <Card.Body>
           <blockquote className="blockquote mb-0">
             <p>{comment.comment}</p>
@@ -191,6 +201,7 @@ const handleUpdate = async () => {
 <Card>
   <Card.Header>
     <Card.Title style={{ fontSize: '16px' }}>
+
     {authuser ? `Commenting as: ${authuser.email}` : 'Not logged in'}
     </Card.Title>
   </Card.Header>
